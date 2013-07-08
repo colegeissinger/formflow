@@ -34,13 +34,13 @@
 
 
 	// Load our primary class
-	if ( ! class_exist( 'CG_FormFlow' ) )
+	if ( ! class_exists( 'CG_FormFlow' ) )
 		require_once( 'classes/class.formflow.php' );
 
 	// Instantiate our class and assign it a variable to use in our helper functions
 	$cg_formflow = new CG_FormFlow;
 
 	// Load our helper functions if everything is setup.
-	if ( isset( $cg_formflow ) && ! empty( $cg_formflow ) )
+	if ( isset( $cg_formflow ) )
 		require_once( 'helpers/helper.formflow.php' );
 
