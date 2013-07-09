@@ -194,12 +194,13 @@
 
 		/**
 		 * Return an error message if nothing is passed
+		 * @param  boolean
 		 * @return string
 		 *
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function fields() {
+		public function fields( $left = false ) {
 
 			// Get the form data
 			$fields = $this->data;
@@ -208,6 +209,15 @@
 			foreach ( $fields as $field ) {
 				$args   		  = $field['args'];
 				$conditionals = $field['conditional'];
+
+				// Add our left class if the option is set
+				if ( $left && ! empty( $args['w_class'] ) ) {
+					$args['w_class'] .= ' left';
+					$args['label_left'] = true;
+				} elseif ( $left && empty( $args['w_class'] ) ) {
+					$args['w_class'] .= 'left';
+					$args['label_left'] = true;
+				}
 
 				// Start our field wrapper, which is an LI.
 				$output .= '<li';
@@ -248,7 +258,7 @@
 					// Close the label tag
 					$output .= '</label>';
 
-					if ( isset( $args['description'] ) && ! empty( $args['description'] ) )
+					if ( isset( $args['description'] ) && ! empty( $args['description'] ) && ! $left )
 						$output .= '<div class="description">' . $args['description'] . '</div>';
 
 					// Return the proper form field
@@ -456,6 +466,9 @@
 
 				$output .= '</select>';
 
+				if ( isset( $args['label_left'] ) && $args['label_left'] )
+					$output .= '<div class="description">' . $args['description'] . '</div>';
+
 				return $output;
 			}
 		}
@@ -622,8 +635,16 @@
 		 * @return mixed
 		 */
 		public function display_form() { ?>
-			<ul>
-				<?php echo $this->fields(); ?>
-			</ul>
+			<form action="<?php $this->process_form(); ?>" class="formflow-form">
+				<fieldset>
+					<legend>Form Sign-up Thing</legend>
+					<ol>
+						<?php echo $this->fields( true ); ?>
+					</ol>
+				</fieldset>
+				<fieldset class="submit">
+					<input type="submit" value="Submit" class="submit" />
+				</fieldset>
+			</form>
 		<?php }
 	}

@@ -44,3 +44,16 @@
 	if ( isset( $cg_formflow ) )
 		require_once( 'helpers/helper.formflow.php' );
 
+
+	/**
+	 * Load some styles outside of the class. This is to be completly separate to allow devs to add their own styles
+	 * @return void
+	 *
+	 * @version 0.1
+	 * @since   0.1
+	 */
+	function cg_formflow_resources() {
+		wp_enqueue_style( 'cg-formflow-default', plugins_url( 'assets/css/default.css', __FILE__ ) );
+	}
+	add_action( 'wp_head', 'cg_formflow_resources' );
+
