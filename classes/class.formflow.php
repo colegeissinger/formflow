@@ -12,19 +12,24 @@
 	class CG_FormFlow {
 
 		/**
-		 * Example settings
-		 * @var associate multidimensional array Contains all the data allowed to be passed to the form_settings() method.
+		 * Allow us to set the demo settings and forms. This will also enable debugging for the form outputs
+		 * @var boolean
 		 */
-		var $settings = array(
-			array(
-				'title' => 'Form Title',
-				'description' => 'This is my form description, if I want one...',
-				'label_placement' => 'left',
-				'desc_placement'  => 'after-title',
-				'args' => array(
-					'class' => 'form-class',
-					'id' => ''
-				),
+		private $form_debug = true;
+
+
+		/**
+		 * Example settings
+		 * @var associate multidimensional array
+		 */
+		private $demo_settings = array(
+			'title' => 'Form Title',
+			'description' => 'This is my form description, if I want one...',
+			'label_placement' => 'left',
+			'desc_placement'  => 'after-title',
+			'args' => array(
+				'class' => 'form-class',
+				'id' => ''
 			),
 		);
 
@@ -33,42 +38,42 @@
 		 * Example data.
 		 * @var associate multidimensional array
 		 */
-		var $data = array(
+		private $demo_form = array(
 			array(
-				'id'   	  => 1,
-				'type' 	  => 'text',
+				'id'   	   => 1,
+				'type' 	   => 'text',
 				'required' => true,
-				'args' 	  => array(
-					'w_id'  	 	  => 'form-title',
+				'args' 	   => array(
+					'w_id'  	  => 'form-title',
 					'w_class' 	  => 'form-title-class, hotdogs',
-					'id'			  => 'text-field',
+					'id'		  => 'text-field',
 					'class'		  => 'text-input',
-					'label' 	  	  => 'Text Field',
-					'placeholder' => 'TEXT',
+					'label' 	  => 'Text Field',
+					'placeholder' => 'TEXT sdagusdhgsuh',
 					'name'	  	  => 'first-text',
 					'description' => 'asfddsf',
 					'maxlength'   => 50,
 				),
 			),
 			array(
-				'id'   	  => 2,					// integer. The ID associated to this input field.
-				'type' 	  => 'text',			// string.  options - text, textarea, dropdown, multiselect, number, checkbox, radio, image, file, date, phone, hidden, html, section, page-break
-				'required' => true,				// boolean. Enables a field to be required for input.
-				'args' 	  => array(				// array.	Arguments to pass for customizing the field.
-					'w_id'  	 	  => 'form-title',  // string.  The ID to apply to the wrapper element of the input field.
+				'id'   	   => 2,					// integer. The ID associated to this input field.
+				'type' 	   => 'text',				// string.  options - text, textarea, dropdown, multiselect, number, checkbox, radio, image, file, date, phone, hidden, html, section, page-break
+				'required' => true,					// boolean. Enables a field to be required for input.
+				'args' 	   => array(				// array.	Arguments to pass for customizing the field.
+					'w_id'  	  => 'form-title',  // string.  The ID to apply to the wrapper element of the input field.
 					'w_class' 	  => 'form-class',  // string.  The class to apply to the wrapper element of the input field.
-					'id'			  => 'text-field',  // string.  The ID to apply to the input field itself.
+					'id'		  => 'text-field',  // string.  The ID to apply to the input field itself.
 					'class'		  => 'text-input',  // string.  The class to apply to the input field itself.
-					'label' 	  	  => 'Text Field',  // string.  The label to add to the front-end of the form.
+					'label' 	  => 'Text Field',  // string.  The label to add to the front-end of the form.
 					'placeholder' => 'placeholder', // string.  The default value. If added to text field, this is added into the placeholder attribute.
-					'name'	  	  => 'text[]',		  // string.  The name field. If not set, the label is used instead. To create an array use []
-					'description' => '',				  // string.  The description of the field. Normally useful for explaining the field for users on the front-end.
-					'maxlength'   => 50,				  // integer. Enables max-length functionality.
+					'name'	  	  => 'text[]',		// string.  The name field. If not set, the label is used instead. To create an array use []
+					'description' => '',			// string.  The description of the field. Normally useful for explaining the field for users on the front-end.
+					'maxlength'   => 50,		    // integer. Enables max-length functionality.
 				),
-				'conditional' => array(	// array.  Allows us to set conditional show/hiding of input fields based on certain conditions.
-					'action' => 'show',  // string. The action to take such as displaying or hiding an input field. opts - show, hide
-					'logic'  => 'all',   // string. The logic we are looking for conditions to be met. opts - all, any
-					'rules'  => array(   // array.  The actual rules we are looking for. Set multiple rules in separate arrays.
+				'conditional' => array(	  // array.  Allows us to set conditional show/hiding of input fields based on certain conditions.
+					'action'  => 'show',  // string. The action to take such as displaying or hiding an input field. opts - show, hide
+					'logic'   => 'all',   // string. The logic we are looking for conditions to be met. opts - all, any
+					'rules'   => array(   // array.  The actual rules we are looking for. Set multiple rules in separate arrays.
 						array(
 							'form_id'  => 1,      // integer. The ID of the form that we will conditionally check for.
 							'operator' => 'is',   // string.  The detailed logic we are searching for. opts is, is not, greater than, less than, contains, starts with, ends with
@@ -78,36 +83,36 @@
 				),
 			),
 			array(
-				'id'   	  => 3,
-				'type' 	  => 'textarea',
+				'id'   	   => 3,
+				'type' 	   => 'textarea',
 				'required' => false,
-				'args' 	  => array(
-					'w_id'  	 	  => 'form-title',
+				'args' 	   => array(
+					'w_id'  	  => 'form-title',
 					'w_class' 	  => 'form-title-class',
-					'id'			  => 'text-field',
+					'id'		  => 'text-field',
 					'class'		  => 'text-input',
-					'label' 	  	  => 'TEXTAREA',
+					'label' 	  => 'TEXTAREA',
 					'placeholder' => 'textarea placeholder',
 					'name'	  	  => 'first-text',
 					'description' => 'My awesome textarea yo.',
 					'maxlength'   => 250,
-					'cols'		  => 30,					// integer.  Set a column width if needed.
-					'rows'		  => 10,					// integer.  Set a row width if needed.
+					'cols'		  => 30, // integer.  Set a column width if needed.
+					'rows'		  => 10, // integer.  Set a row width if needed.
 				),
 			),
 			array(
-				'id'   	  => 3,
-				'type' 	  => 'dropdown',
+				'id'   	   => 3,
+				'type' 	   => 'dropdown',
 				'required' => false,
-				'args' 	  => array(
-					'w_id'  	 	  => 'form-title',
+				'args' 	   => array(
+					'w_id'  	  => 'form-title',
 					'w_class' 	  => 'form-title-class',
-					'id'			  => 'text-field',
+					'id'		  => 'text-field',
 					'class'		  => 'text-input',
-					'label' 	  	  => 'DROPDOWN',
+					'label' 	  => 'DROPDOWN',
 					'name'	  	  => 'first-text',
 					'description' => 'dropdown',
-					'options'	  => array(			// Sets up our select drop down. Set each option field with $value => $label
+					'options'	  => array(	// Sets up our select drop down. Set each option field with $value => $label
 						'value1' => 'Value 1',
 						'value2' => 'Value 2',
 						'value3' => 'Value 3',
@@ -123,11 +128,11 @@
 		 * The current version of this plugin
 		 * @var string
 		 */
-		protected $plugin_version = '0.1';
+		private $plugin_version = '0.1';
 
 
 		/**
-		 * The current list of items.
+		 * The list of form settings. Refere to the $demo_settings for reference on how to build this array
 		 *
 		 * REQUIRED
 		 * @var array
@@ -135,7 +140,19 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		protected $items;
+		private $settings;
+
+
+		/**
+		 * The list of custom form items. Refere to the $demo_form for reference on how to build this array
+		 *
+		 * REQUIRED
+		 * @var array
+		 *
+		 * @version 0.1
+		 * @since   0.1
+		 */
+		private $form;
 
 
 		/**
@@ -146,8 +163,9 @@
 		 * @since   0.1
 		 */
 		public function has_items() {
-			return ! empty( $this->items );
+			return ! empty( $this->form );
 		}
+
 
 		/**
 		 * Return an error message if nothing is passed
@@ -162,60 +180,46 @@
 
 
 		/**
-		 * Return an error message if nothing is passed
+		 * Main loader.
 		 * @return string
 		 *
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function __construct( $args = array() ) {
-			$args = wp_parse_args( $args, array(
-				'plural'   => '',
-				'singular' => '',
-			) );
+		public function __construct( $settings = array(), $form = array() ) {
 
-			$args['plural'] = sanitize_key( $args['plural'] );
-			$args['singular'] = sanitize_key( $args['singular'] );
+			// Pass our custom settings or else get the default (only for development)
+			$this->settings = ( empty( $settings ) && $this->form_debug  ) ? $this->demo_settings : $settings;
 
+			// Pass our custom Form or else get the default (only for development)
+			$this->form     = ( empty( $form ) && $this->form_debug ) ? $this->demo_form : $form;
 		}
 
 
 		/**
-		 * Return an error message if nothing is passed
-		 * @return string
-		 *
-		 * @version 0.1
-		 * @since   0.1
-		 */
-		public function form_settings() {
-			$settings = $this->settings;
-		}
-
-
-		/**
-		 * Return an error message if nothing is passed
+		 * Processes all of our form fields
 		 * @param  boolean
 		 * @return string
 		 *
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function fields( $left = false ) {
+		private function fields( $alignment_left = false ) {
 
 			// Get the form data
-			$fields = $this->data;
+			$fields = $this->form;
 			$output = '';
 
 			foreach ( $fields as $field ) {
-				$args   		  = $field['args'];
+				$args         = $field['args'];
 				$conditionals = $field['conditional'];
 
 				// Add our left class if the option is set
-				if ( $left && ! empty( $args['w_class'] ) ) {
-					$args['w_class'] .= ' left';
+				if ( $alignment_left && ! empty( $args['w_class'] ) ) {
+					$args['w_class']   .= ' left';
 					$args['label_left'] = true;
-				} elseif ( $left && empty( $args['w_class'] ) ) {
-					$args['w_class'] .= 'left';
+				} elseif ( $alignment_left && empty( $args['w_class'] ) ) {
+					$args['w_class']   .= 'left';
 					$args['label_left'] = true;
 				}
 
@@ -258,7 +262,7 @@
 					// Close the label tag
 					$output .= '</label>';
 
-					if ( isset( $args['description'] ) && ! empty( $args['description'] ) && ! $left )
+					if ( isset( $args['description'] ) && ! empty( $args['description'] ) && ! $alignment_left )
 						$output .= '<div class="description">' . $args['description'] . '</div>';
 
 					// Return the proper form field
@@ -275,14 +279,14 @@
 
 		/**
 		 * Check our conditionals and setup the right data attribute for use in JavaScript validation
-		 * @param string $type The type of input field we want to return
-		 * @param array  $args An array of arguments to pass to the input field functions
+		 * @param  string  $type  The type of input field we want to return
+		 * @param  array   $args  An array of arguments to pass to the input field functions
 		 * @return string
 		 *
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function check_conditionals( $conditionals ) {
+		private function check_conditionals( $conditionals ) {
 
 			if ( isset( $conditionals ) && is_array( $conditiaonls ) ) {
 
@@ -292,14 +296,14 @@
 
 		/**
 		 * Return an error message if nothing is passed
-		 * @param string $type The type of input field we want to return
-		 * @param array  $args An array of arguments to pass to the input field functions
+		 * @param string  $type  The type of input field we want to return
+		 * @param array   $args  An array of arguments to pass to the input field functions
 		 * @return void
 		 *
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_field( $type, $args ) {
+		private function get_field( $type, $args ) {
 
 			switch ( $type ) {
 				case 'text':
@@ -358,7 +362,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_text_field( $args ) {
+		private function get_text_field( $args ) {
 
 			if ( ! empty( $args ) ) {
 				$output = '<input type="text"';
@@ -396,7 +400,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_textarea( $args ) {
+		private function get_textarea( $args ) {
 
 			if ( ! empty( $args ) ) {
 				$output = '<textarea';
@@ -438,7 +442,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_dropdown( $args ) {
+		private function get_dropdown( $args ) {
 
 			if ( ! empty( $args ) ) {
 				$output = '<select';
@@ -481,7 +485,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_multiselect( $args ) {
+		private function get_multiselect( $args ) {
 
 		}
 
@@ -493,7 +497,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_number_field( $args ) {
+		private function get_number_field( $args ) {
 
 		}
 
@@ -505,7 +509,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_checkbox( $args ) {
+		private function get_checkbox( $args ) {
 
 		}
 
@@ -517,7 +521,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_radio( $args ) {
+		private function get_radio( $args ) {
 
 		}
 
@@ -529,7 +533,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_image_upload( $args ) {
+		private function get_image_upload( $args ) {
 
 		}
 
@@ -541,7 +545,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_file_upload( $args ) {
+		private function get_file_upload( $args ) {
 
 		}
 
@@ -553,7 +557,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_date_field( $args ) {
+		private function get_date_field( $args ) {
 
 		}
 
@@ -565,7 +569,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_phone_field( $args ) {
+		private function get_phone_field( $args ) {
 
 		}
 
@@ -577,7 +581,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_hidden_field( $args ) {
+		private function get_hidden_field( $args ) {
 
 		}
 
@@ -589,7 +593,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_html_block( $args ) {
+		private function get_html_block( $args ) {
 
 		}
 
@@ -601,7 +605,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_section_wrapper( $args ) {
+		private function get_section_wrapper( $args ) {
 
 		}
 
@@ -613,7 +617,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function get_page_break( $args ) {
+		private function get_page_break( $args ) {
 
 		}
 
@@ -625,7 +629,7 @@
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function process_form() {
+		private function process_form() {
 
 		}
 
@@ -633,13 +637,27 @@
 		/**
 		 * The grand-daddy. This method will process all the data we have created and will output them into an actual working form.
 		 * @return mixed
+		 *
+		 * @version 0.1
+		 * @since   0.1
 		 */
-		public function display_form() { ?>
+		public function display_form() { 
+
+			// Get our form settings
+			$settings = $this->settings; ?>
 			<form action="<?php $this->process_form(); ?>" class="formflow-form">
 				<fieldset>
-					<legend>Form Sign-up Thing</legend>
+					
+					<?php if ( isset( $settings['title'] ) && ! empty( $settings['title'] ) ) : ?>
+						<legend class="form-title"><?php echo $settings['title']; ?></legend>
+					<?php endif; ?>
+
+					<?php if ( isset( $settings['description'] ) && ! empty( $settings['description'] ) ) : ?>
+						<p class="form-description"><?php echo $settings['description']; ?></p>
+					<?php endif; ?>
+
 					<ol>
-						<?php echo $this->fields( true ); ?>
+						<?php echo $this->fields( $settings['label_placement'] ); ?>
 					</ol>
 				</fieldset>
 				<fieldset class="submit">
