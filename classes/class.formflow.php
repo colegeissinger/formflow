@@ -19,10 +19,10 @@
 
 
 		/**
-		 * Example settings
+		 * Default Settings !** Extend this class to and create a new settings array **!
 		 * @var associate multidimensional array
 		 */
-		private $demo_settings = array(
+		private $settings = array(
 			'title' => 'Form Title',
 			'description' => 'This is my form description, if I want one...',
 			'label_placement' => 'left',
@@ -35,10 +35,10 @@
 
 
 		/**
-		 * Example data.
+		 * Default Form !** Extend this class to and create a new settings array **!
 		 * @var associate multidimensional array
 		 */
-		private $demo_form = array(
+		private $form = array(
 			array(
 				'id'   	   => 1,
 				'type' 	   => 'text',
@@ -101,7 +101,7 @@
 				),
 			),
 			array(
-				'id'   	   => 3,
+				'id'   	   => 4,
 				'type' 	   => 'dropdown',
 				'required' => false,
 				'args' 	   => array(
@@ -132,38 +132,35 @@
 
 
 		/**
-		 * The list of form settings. Refere to the $demo_settings for reference on how to build this array
-		 *
-		 * REQUIRED
-		 * @var array
+		 * Main loader.
+		 * @return string
 		 *
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		private $settings;
+		public function __construct( $settings = array(), $form = array() ) {
+
+			// Pass our custom settings or else get the default (only for development)
+			$this->settings = ( $settings && $this->form_debug  ) ? $this->demo_settings : $settings;
+
+			// Pass our custom Form or else get the default (only for development)
+			$this->form     = ( $form && $this->form_debug ) ? $this->demo_form : $form;
+		}
 
 
 		/**
-		 * The list of custom form items. Refere to the $demo_form for reference on how to build this array
-		 *
-		 * REQUIRED
-		 * @var array
-		 *
-		 * @version 0.1
-		 * @since   0.1
-		 */
-		private $form;
-
-
-		/**
-		 * Whether the class has been given some elements to process
+		 * Whether the class has been given some form fields to process
 		 * @return boolean
 		 *
 		 * @version 0.1
 		 * @since   0.1
 		 */
-		public function has_items() {
-			return ! empty( $this->form );
+		public function has_form_fields() {
+			if ( ! empty( $this->form ) || ! is_null( $this->form ) ) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 
@@ -176,23 +173,6 @@
 		 */
 		public function no_items() {
 			_e( 'No form items set', 'geissinger-formflow');
-		}
-
-
-		/**
-		 * Main loader.
-		 * @return string
-		 *
-		 * @version 0.1
-		 * @since   0.1
-		 */
-		public function __construct( $settings = array(), $form = array() ) {
-
-			// Pass our custom settings or else get the default (only for development)
-			$this->settings = ( empty( $settings ) && $this->form_debug  ) ? $this->demo_settings : $settings;
-
-			// Pass our custom Form or else get the default (only for development)
-			$this->form     = ( empty( $form ) && $this->form_debug ) ? $this->demo_form : $form;
 		}
 
 
@@ -644,25 +624,32 @@
 		public function display_form() { 
 
 			// Get our form settings
-			$settings = $this->settings; ?>
-			<form action="<?php $this->process_form(); ?>" class="formflow-form">
-				<fieldset>
-					
-					<?php if ( isset( $settings['title'] ) && ! empty( $settings['title'] ) ) : ?>
-						<legend class="form-title"><?php echo $settings['title']; ?></legend>
-					<?php endif; ?>
+			$settings = $this->settings; 
 
-					<?php if ( isset( $settings['description'] ) && ! empty( $settings['description'] ) ) : ?>
-						<p class="form-description"><?php echo $settings['description']; ?></p>
-					<?php endif; ?>
+			if ( $this->has_form_fields() ) : ?>
+				<form action="<?php $this->process_form(); ?>" class="formflow-form">
+					<fieldset>
+						
+						<?php if ( isset( $settings['title'] ) && ! empty( $settings['title'] ) ) : ?>
+							<legend class="form-title"><?php echo $settings['title']; ?></legend>
+						<?php endif; ?>
 
-					<ol>
-						<?php echo $this->fields( $settings['label_placement'] ); ?>
-					</ol>
-				</fieldset>
-				<fieldset class="submit">
-					<input type="submit" value="Submit" class="submit" />
-				</fieldset>
-			</form>
-		<?php }
+						<?php if ( isset( $settings['description'] ) && ! empty( $settings['description'] ) ) : ?>
+							<p class="form-description"><?php echo $settings['description']; ?></p>
+						<?php endif; ?>
+
+						<ol>
+							<?php echo $this->fields( $settings['label_placement'] ); ?>
+						</ol>
+					</fieldset>
+					<fieldset class="submit">
+						<input type="submit" value="Submit" class="submit" />
+					</fieldset>
+				</form>
+			<?php else : ?>
+				<h3>These are not the forms you are looking for...</h3>
+				<p>Whooooops! Looks like there are no forms to process..</p>
+				<p>Make sure you properlly extended the FormFlow class and created settings and forms to build!</p>
+			<?php endif;
+		}
 	}

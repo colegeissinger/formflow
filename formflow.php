@@ -38,7 +38,7 @@
 		require_once( 'classes/class.formflow.php' );
 
 	// Instantiate our class and assign it a variable to use in our helper functions
-	$cg_formflow = new CG_FormFlow;
+	$cg_formflow = new CG_FormFlow( cg_formflow_settings(), cg_formflow_form() );
 
 	// Load our helper functions if everything is setup.
 	if ( isset( $cg_formflow ) )
