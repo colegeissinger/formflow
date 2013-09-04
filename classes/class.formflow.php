@@ -121,6 +121,28 @@
 					),
 				),
 			),
+			array(
+				'id'   	   => 5,
+				'type' 	   => 'multiselect',
+				'required' => false,
+				'args' 	   => array(
+					'w_id'  	  => 'form-title',
+					'w_class' 	  => 'form-title-class',
+					'id'		  => 'text-field',
+					'class'		  => 'text-input',
+					'label' 	  => 'MULTISELECT',
+					'name'	  	  => 'first-text',
+					'description' => 'dropdown',
+					'size'	  => 2, // New field, unique to Multiselect. This allows us to specify how many fields we want to show before the rest is shown with scrolling
+					'options'	  => array(	// Sets up our select drop down. Set each option field with $value => $label
+						'value1' => 'Value 1',
+						'value2' => 'Value 2',
+						'value3' => 'Value 3',
+						'value4' => 'Value 4',
+						'value5' => 'Value 5',
+					),
+				),
+			),
 		);
 
 
@@ -292,6 +314,7 @@
 			if ( isset( $conditionals ) && is_array( $conditiaonls ) ) {
 
 			}
+
 		}
 
 
@@ -353,6 +376,7 @@
 					return $this->get_page_break( $args );
 					break;
 			}
+
 		}
 
 
@@ -370,27 +394,28 @@
 
 					// Set our name field, if one doesn't exist, use the label
 					if ( isset( $args['name'] ) ) {
-						$output .= ' name="' . $args['name'] . '"';
+						$output .= ' name="' . esc_attr( $args['name'] ) . '"';
 					} else {
-						$output .= ' name="' . urlencode( $args['label'] ) . '"';
+						$output .= ' name="' . esc_attr( $args['label'] ) . '"';
 					}
 
 					// Check for an ID
 					if ( isset( $args['id'] ) )
-						$output .= ' id="' . $args['id'] . '"';
+						$output .= ' id="' . esc_attr( $args['id'] ) . '"';
 
 					// Check for a class
 					if ( isset( $args['class'] ) )
-						$output .= ' class="' . $args['class'] . '"';
+						$output .= ' class="' . esc_attr( $args['class'] ) . '"';
 
 					// Add our placeholder when a value is set
 					if ( isset( $args['placeholder'] ) )
-						$output .= ' placeholder="' . $args['placeholder'] . '"';
+						$output .= ' placeholder="' . esc_attr( $args['placeholder'] ) . '"';
 
 				$output .= ' />';
 
 				return $output;
 			}
+
 		}
 
 
@@ -408,31 +433,32 @@
 
 					// Set our name field, if one doesn't exist, other wise use the label
 					if ( isset( $args['name'] ) ) {
-						$output .= ' name="' . $args['name'] . '"';
+						$output .= ' name="' . esc_attr( $args['name'] ) . '"';
 					} else {
-						$output .= ' name="' . urlencode( $args['label'] ) . '"';
+						$output .= ' name="' . esc_attr( $args['label'] ) . '"';
 					}
 
 					// Check for an ID
 					if ( isset( $args['id'] ) )
-						$output .= ' id="' . $args['id'] . '"';
+						$output .= ' id="' . esc_attr( $args['id'] ) . '"';
 
 					// Check if a column size is set
 					if ( isset( $args['cols'] ) )
-						$output .= ' cols="' . $args['cols'] . '"';
+						$output .= ' cols="' . esc_attr( $args['cols'] ) . '"';
 
 					// Check if a row size is set
 					if ( isset( $args['rows'] ) )
-						$output .= ' rows="' . $args['rows'] . '"';
+						$output .= ' rows="' . esc_attr( $args['rows'] ) . '"';
 
 					// Add a placeholder if set
 					if ( isset( $args['placeholder'] ) )
-						$output .= ' placeholder="' . $args['placeholder'] . '"';
+						$output .= ' placeholder="' . esc_attr( $args['placeholder'] ) . '"';
 
 				$output .= '></textarea>';
 
 				return $output;
 			}
+
 		}
 
 
@@ -450,29 +476,30 @@
 
 					// Set our name field
 					if ( isset( $args['name'] ) ) {
-						$output .= ' name="' . $args['name'] . '"';
+						$output .= ' name="' . esc_attr( $args['name'] ) . '"';
 					} else {
-						$output .= ' name="' . urlencode( $args['label'] ) . '"';
+						$output .= ' name="' . esc_attr( $args['label'] ) . '"';
 					}
 
 					// Check if an ID is set
 					if ( isset( $args['id'] ) )
-						$output .= ' id="' . $args['id'] . '"';
+						$output .= ' id="' . esc_attr( $args['id'] ) . '"';
 
 					// Check if a class is set
 					if ( isset( $args['class'] ) )
-						$output .= ' class="' . $args['class'] . '"';
+						$output .= ' class="' . esc_attr( $args['class'] ) . '"';
 
 				$output .= '>';
 
 					foreach ( $args['options'] as $value => $label ) {
-						$output .= '<option value="' . $value . '">' . $label . '</option>';
+						$output .= '<option value="' . esc_attr( $value ) . '">' . esc_html( $label ) . '</option>';
 					}
 
 				$output .= '</select>';
 
 				return $output;
 			}
+
 		}
 
 
@@ -485,6 +512,34 @@
 		 */
 		private function get_multiselect( $args ) {
 
+			if ( ! empty( $args ) ) {
+				$output = '<select';
+
+					// Set our name field
+					if ( isset( $args['name'] ) ) {
+						$output .= ' name="' . esc_attr( $args['name'] ) . '"';
+					} else {
+						$output .= ' name="' . urlencode( $args['label'] ) . '"';
+					}
+
+					// Check if an ID is set
+					if ( isset( $args['id'] ) )
+						$output .= ' id="' . esc_attr( $args['id'] ) . '"';
+
+					// Check if a class is set
+					if ( isset( $args['class'] ) )
+						$output .= ' class="' . esc_attr( $args['class'] ) . '"';
+
+				$output .= ' multiple size="' . absint( $args['size'] ) . '">';
+
+					foreach ( $args['options'] as $value => $label ) {
+						$output .= '<option value="' . esc_attr( $value ) . '">' . esc_html( $label ) . '</option>';
+					}
+
+				$output .= '</select>';
+
+				return $output;
+			}
 		}
 
 
