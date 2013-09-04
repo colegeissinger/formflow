@@ -25,7 +25,7 @@
 		private $demo_settings = array(
 			'title' => 'Form Title',
 			'description' => 'This is my form description, if I want one...',
-			'label_placement' => 'left',
+			'label_left' => false,
 			'desc_placement'  => 'after-title',
 			'args' => array(
 				'class' => 'form-class',
@@ -186,7 +186,9 @@
 		 * @since   0.1
 		 */
 		public function no_items() {
-			_e( 'No form items set', 'geissinger-formflow');
+			echo '<h3>These are not the forms you are looking for...</h3>';
+			echo '<p>Whooooops! Looks like there are no forms to process..</p>';
+			echo '<p>Make sure you provide an array of form fields to output.</p>';
 		}
 
 
@@ -256,11 +258,16 @@
 					// Close the label tag
 					$output .= '</label>';
 
+					// Add our description if left aligned form fields is NOT set.
 					if ( isset( $args['description'] ) && ! empty( $args['description'] ) && ! $alignment_left )
-						$output .= '<div class="description">' . $args['description'] . '</div>';
+						$output .= '<div class="ff_description">' . $args['description'] . '</div>';
 
 					// Return the proper form field
 					$output .= $this->get_field( $field['type'], $args );
+
+					// If left aligned form fields are set, let's add the description below the form field
+					if ( isset( $args['description'] ) && ! empty( $args['description'] ) && $alignment_left )
+						$output .= '<div class="ff_description">' . $args['description'] . '</div>';
 
 				// Close the field wrapper.
 				$output .= '</li>';
@@ -464,9 +471,6 @@
 
 				$output .= '</select>';
 
-				if ( isset( $args['label_left'] ) && $args['label_left'] )
-					$output .= '<div class="description">' . $args['description'] . '</div>';
-
 				return $output;
 			}
 		}
@@ -653,7 +657,7 @@
 						<?php endif; ?>
 
 						<ol>
-							<?php echo $this->fields( $settings['label_placement'] ); ?>
+							<?php echo $this->fields( $settings['label_left'] ); ?>
 						</ol>
 					</fieldset>
 					<fieldset class="submit">
@@ -661,9 +665,7 @@
 					</fieldset>
 				</form>
 			<?php else : ?>
-				<h3>These are not the forms you are looking for...</h3>
-				<p>Whooooops! Looks like there are no forms to process..</p>
-				<p>Make sure you properlly extended the FormFlow class and created settings and forms to build!</p>
+				<?php echo $this->no_items(); ?>
 			<?php endif;
 		}
 	}

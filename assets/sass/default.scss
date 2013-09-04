@@ -9,10 +9,16 @@
 		}
 		li {
 			padding-bottom:1em;
-			&.left label {
-				float:left;
-				width:10em;
-				margin-right:1em;
+			&.left {
+				label {
+					float:left;
+					width:10em;
+					margin-right:1em;
+				}
+				.ff_description {
+					position:relative;
+					left:11em;
+				}
 			}
 		}
 		&.submit { border-style:none; }
