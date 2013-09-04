@@ -143,6 +143,24 @@
 					),
 				),
 			),
+			array(
+				'id'   	   => 6,
+				'type' 	   => 'number',
+				'required' => false,
+				'args' 	   => array(
+					'w_id'  	  => 'form-title',
+					'w_class' 	  => 'form-title-class',
+					'id'		  => 'text-field',
+					'class'		  => 'text-input',
+					'label' 	  => 'NUMBER',
+					'name'	  	  => 'first-text',
+					'description' => '',
+					'options'	  => array(	// Add our minimum and maximum fields if we want to
+						'minimum' => 1, // Should be positive integers only
+						'maximum' => 10,
+					),
+				),
+			),
 		);
 
 
@@ -250,7 +268,7 @@
 
 					// Set a wrapper class if present.
 					if ( isset( $args['w_class'] )  && ! empty( $args['w_class'] ) )
-						$output .= ' class="' . $args['w_class'] . '"';
+						$output .= ' class="' . esc_attr( $args['w_class'] ) . '"';
 
 					// Check if the field is required
 					if ( $field['required'] )
@@ -268,28 +286,28 @@
 
 						// Set our for value if a form id.
 						if ( isset( $args['id'] ) && ! empty( $args['id'] ) )
-							$output .= ' for="' . $args['id'] . '"';
+							$output .= ' for="' . esc_attr( $args['id'] ) . '"';
 
 					// Close the opening label tag.
 					$output .= '>';
 
 						// Check that a label exists...
 						if ( isset( $args['label'] ) && ! empty( $args['label'] ) )
-							$output .= $args['label'];
+							$output .= wp_kses_post( $args['label'] );
 
 					// Close the label tag
 					$output .= '</label>';
 
 					// Add our description if left aligned form fields is NOT set.
 					if ( isset( $args['description'] ) && ! empty( $args['description'] ) && ! $alignment_left )
-						$output .= '<div class="ff_description">' . $args['description'] . '</div>';
+						$output .= '<div class="ff_description">' . wp_kses_post( $args['description'] ) . '</div>';
 
 					// Return the proper form field
 					$output .= $this->get_field( $field['type'], $args );
 
 					// If left aligned form fields are set, let's add the description below the form field
 					if ( isset( $args['description'] ) && ! empty( $args['description'] ) && $alignment_left )
-						$output .= '<div class="ff_description">' . $args['description'] . '</div>';
+						$output .= '<div class="ff_description">' . wp_kses_post( $args['description'] ) . '</div>';
 
 				// Close the field wrapper.
 				$output .= '</li>';
@@ -519,7 +537,7 @@
 					if ( isset( $args['name'] ) ) {
 						$output .= ' name="' . esc_attr( $args['name'] ) . '"';
 					} else {
-						$output .= ' name="' . urlencode( $args['label'] ) . '"';
+						$output .= ' name="' . esc_attr( $args['label'] ) . '"';
 					}
 
 					// Check if an ID is set
@@ -551,6 +569,41 @@
 		 * @since   0.1
 		 */
 		private function get_number_field( $args ) {
+
+			if ( ! empty( $args ) ) {
+				$output = '<input type="number"';
+
+					// Set our name field, if one doesn't exist, use the label
+					if ( isset( $args['name'] ) ) {
+						$output .= ' name="' . esc_attr( $args['name'] ) . '"';
+					} else {
+						$output .= ' name="' . esc_attr( $args['label'] ) . '"';
+					}
+
+					// Check for an ID
+					if ( isset( $args['id'] ) )
+						$output .= ' id="' . esc_attr( $args['id'] ) . '"';
+
+					// Check for a class
+					if ( isset( $args['class'] ) )
+						$output .= ' class="' . esc_attr( $args['class'] ) . '"';
+
+					// Add some options for setting a minimum and maximum
+					if ( isset( $args['options'] ) ) {
+
+						// Add our min field if we set it
+						if ( isset( $args['options']['minimum'] ) && ! empty( $args['options']['minimum'] ) )
+							$output .= ' min="' . esc_attr( $args['options']['minimum'] ) . '"';
+
+						// Add our max field if we set it
+						if ( isset( $args['options']['maximum'] ) && ! empty( $args['options']['maximum'] ) )
+							$output .= ' max="' . esc_attr( $args['options']['maximum'] ) . '"';
+					}
+
+				$output .= ' />';
+
+				return $output;
+			}
 
 		}
 
