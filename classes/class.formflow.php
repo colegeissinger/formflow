@@ -15,14 +15,14 @@
 		 * Allow us to set the demo settings and forms. This will also enable debugging for the form outputs
 		 * @var boolean
 		 */
-		private $form_debug = true;
+		private $form_debug = false;
 
 
 		/**
-		 * Default Settings !** Extend this class to and create a new settings array **!
+		 * Default Settings when no settings exist
 		 * @var associate multidimensional array
 		 */
-		private $settings = array(
+		private $demo_settings = array(
 			'title' => 'Form Title',
 			'description' => 'This is my form description, if I want one...',
 			'label_placement' => 'left',
@@ -35,10 +35,10 @@
 
 
 		/**
-		 * Default Form !** Extend this class to and create a new settings array **!
+		 * Default Form when no fields exist
 		 * @var associate multidimensional array
 		 */
-		private $form = array(
+		private $demo_form = array(
 			array(
 				'id'   	   => 1,
 				'type' 	   => 'text',
@@ -132,6 +132,20 @@
 
 
 		/**
+		 * Custom Settings when no settings exist
+		 * @var associate multidimensional array
+		 */
+		private $settings;
+
+
+		/**
+		 * Custom Form Fields
+		 * @var associate multidimensional array
+		 */
+		private $form;
+
+
+		/**
 		 * Main loader.
 		 * @return string
 		 *
@@ -141,10 +155,10 @@
 		public function __construct( $settings = array(), $form = array() ) {
 
 			// Pass our custom settings or else get the default (only for development)
-			$this->settings = ( $settings && $this->form_debug  ) ? $this->demo_settings : $settings;
+			$this->settings = ( empty( $settings ) && $this->form_debug ) ? $this->demo_settings : $settings;
 
 			// Pass our custom Form or else get the default (only for development)
-			$this->form     = ( $form && $this->form_debug ) ? $this->demo_form : $form;
+			$this->form     = ( empty( $form ) && $this->form_debug ) ? $this->demo_form : $form;
 		}
 
 
@@ -156,10 +170,10 @@
 		 * @since   0.1
 		 */
 		public function has_form_fields() {
-			if ( ! empty( $this->form ) || ! is_null( $this->form ) ) {
-				return true;
-			} else {
+			if ( empty( $this->form ) || is_null( $this->form ) ) {
 				return false;
+			} else {
+				return true;
 			}
 		}
 
@@ -623,8 +637,8 @@
 		 */
 		public function display_form() { 
 
-			// Get our form settings
-			$settings = $this->settings; 
+			// Get our custom form settings
+			$settings = $this->settings;
 
 			if ( $this->has_form_fields() ) : ?>
 				<form action="<?php $this->process_form(); ?>" class="formflow-form">
