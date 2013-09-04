@@ -1,7 +1,5 @@
 <?php
 
-
-
 	/**
 	 * Display our form
 	 * @return void

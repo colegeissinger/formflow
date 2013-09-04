@@ -25,11 +25,22 @@
 		private $demo_settings = array(
 			'title' => 'Form Title',
 			'description' => 'This is my form description, if I want one...',
-			'label_left' => false,
-			'desc_placement'  => 'after-title',
+			'label_left' => false,				// Define where if you want labels to left or stacked
 			'args' => array(
 				'class' => 'form-class',
 				'id' => ''
+			),
+			'submission' => 'refresh', // Two options. 'ajax' or 'refresh'
+			'method' => 'post', // The method to use when submitting, POST or GET.
+			'security' => array(
+				'input_id' => 'ff-submitted', // The value to set when submitting our form.
+				'nonce_action' => 'save_form', // Action name. Should give the context to what is taking place.
+				'nonce_name' => 'formflow_nonce', // Nonce name. This is the name of the nonce hidden form field to be created.
+			),
+			'create-post' => array(  // We can setup our form to create a new post on save. YAY!
+				'form_title' => 'first-text', // The NAME FIELD of the form field we want to set as our post title
+				'post_type' => 'page', // Pass the post type name
+				'post_status' => 'draft', // Pass the post status. If empty or not set, 'publish' is default
 			),
 		);
 
@@ -93,7 +104,7 @@
 					'class'		  => 'text-input',
 					'label' 	  => 'TEXTAREA',
 					'placeholder' => 'textarea placeholder',
-					'name'	  	  => 'first-text',
+					'name'	  	  => 'textarea',
 					'description' => 'My awesome textarea yo.',
 					'maxlength'   => 250,
 					'cols'		  => 30, // integer.  Set a column width if needed.
@@ -110,7 +121,7 @@
 					'id'		  => 'text-field',
 					'class'		  => 'text-input',
 					'label' 	  => 'DROPDOWN',
-					'name'	  	  => 'first-text',
+					'name'	  	  => 'dropdown',
 					'description' => 'dropdown',
 					'options'	  => array(	// Sets up our select drop down. Set each option field with $value => $label
 						'value1' => 'Value 1',
@@ -131,7 +142,7 @@
 					'id'		  => 'text-field',
 					'class'		  => 'text-input',
 					'label' 	  => 'MULTISELECT',
-					'name'	  	  => 'first-text',
+					'name'	  	  => 'multiselect',
 					'description' => 'dropdown',
 					'size'	  => 2, // New field, unique to Multiselect. This allows us to specify how many fields we want to show before the rest is shown with scrolling
 					'options'	  => array(	// Sets up our select drop down. Set each option field with $value => $label
@@ -153,7 +164,7 @@
 					'id'		  => 'text-field',
 					'class'		  => 'text-input',
 					'label' 	  => 'NUMBER',
-					'name'	  	  => 'first-text',
+					'name'	  	  => 'number',
 					'description' => '',
 					'options'	  => array(	// Add our minimum and maximum fields if we want to
 						'minimum' => 1, // Should be positive integers only
@@ -199,6 +210,11 @@
 
 			// Pass our custom Form or else get the default (only for development)
 			$this->form     = ( empty( $form ) && $this->form_debug ) ? $this->demo_form : $form;
+
+			// If we want to save the form on refresh, let's do that
+			if ( $this->settings['submission'] == 'refresh' )
+				$this->form_action_refresh();
+
 		}
 
 
@@ -233,6 +249,60 @@
 
 
 		/**
+		 * Handles how we want to process our forms. Ajax, or on page refresh
+		 * @return void
+		 *
+		 * @version 0.1
+		 * @since   0.1
+		 */
+		private function form_action_refresh() {
+
+			// Make sure we submitted our form and do it securely
+			if ( ! isset( $_POST['ff-submitted'] ) && ! $_POST['ff-submitted'] && ! isset( $_POST['formflow_nonce'] ) && ! wp_verify_nonce( $_POST['formflow_nonce'], 'save_form' ) )
+				return;
+
+
+			// Check if we want our form to create a post on save.
+			if ( isset( $this->settings['create-post'] ) ) {
+				
+				// Call our save post method
+				$results = $this->form_save_post( $_POST );
+
+				return $results;
+			}
+		}
+
+
+		/**
+		 * Process our form data and saves it into a post.
+		 * @param  array  $data  The data saved from the form
+		 * @return void
+		 *
+		 * @version 0.1
+		 * @since   0.1
+		 */
+		private function form_save_post( $data ) {
+
+			// Make sure we submitted our form one more time...
+			if ( ! isset( $data['ff-submitted'] ) && ! $data['ff-submitted'] && ! isset( $data['formflow_nonce'] ) && ! wp_verify_nonce( $data['formflow_nonce'], 'save_form' ) )
+				return;
+
+			$post_info = $this->settings['create-post'];
+
+			$post = array(
+				'post_title'   => ( isset( $post_info['form_title'] ) && ! empty( $post_info['form_title'] ) ) ? sanitize_text_field( $data[ $post_info['form_title'] ] ) : '',
+				'post_content' => json_encode( $_POST ),
+				'post_status'  => ( isset( $post_info['post_status'] ) && ! empty( $post_info['post_status'] ) ) ? esc_attr( $post_info['post_status'] ) : 'publish',
+				'post_type'	   => ( isset( $post_info['post_type'] ) && ! empty( $post_info['post_type'] ) ) ? esc_attr( $post_info['post_type'] ) : 'post',
+			);
+
+			$new_post = wp_insert_post( $post );
+
+			return $new_post;
+		}
+
+
+		/**
 		 * Processes all of our form fields
 		 * @param  boolean
 		 * @return string
@@ -247,8 +317,8 @@
 			$output = '';
 
 			foreach ( $fields as $field ) {
-				$args         = $field['args'];
-				$conditionals = $field['conditional'];
+				$args         = ( isset( $field['args'] ) ) ? $field['args'] : '';
+				$conditionals = ( isset( $field['conditional'] ) ) ? $field['conditional'] : '';
 
 				// Add our left class if the option is set
 				if ( $alignment_left && ! empty( $args['w_class'] ) ) {
@@ -264,7 +334,7 @@
 
 					// Set a wrapper ID if present.
 					if ( isset( $args['w_id'] ) && ! empty( $args['w_id'] ) )
-						$output .= ' id="' . esc_attr( $args['conditional']['id'] ) . '"';
+						$output .= ' id="' . esc_attr( $args['w_id'] ) . '"';
 
 					// Set a wrapper class if present.
 					if ( isset( $args['w_class'] )  && ! empty( $args['w_class'] ) )
@@ -329,7 +399,7 @@
 		 */
 		private function check_conditionals( $conditionals ) {
 
-			if ( isset( $conditionals ) && is_array( $conditiaonls ) ) {
+			if ( isset( $conditionals ) && is_array( $conditionals ) ) {
 
 			}
 
@@ -753,7 +823,7 @@
 			$settings = $this->settings;
 
 			if ( $this->has_form_fields() ) : ?>
-				<form action="<?php $this->process_form(); ?>" class="formflow-form">
+				<form action="<?php $this->process_form(); ?>" method="<?php echo $settings['method']; ?>" class="formflow-form">
 					<fieldset>
 						
 						<?php if ( isset( $settings['title'] ) && ! empty( $settings['title'] ) ) : ?>
@@ -769,6 +839,8 @@
 						</ol>
 					</fieldset>
 					<fieldset class="submit">
+						<input type="hidden" name="<?php echo $settings['security']['input_id']; ?>" value="true">
+						<?php wp_nonce_field( $settings['security']['nonce_action'], $settings['security']['nonce_name'], false ); ?>
 						<input type="submit" value="Submit" class="submit" />
 					</fieldset>
 				</form>
@@ -776,4 +848,5 @@
 				<?php echo $this->no_items(); ?>
 			<?php endif;
 		}
+
 	}
