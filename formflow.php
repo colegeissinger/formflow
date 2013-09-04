@@ -52,5 +52,5 @@
 	function cg_formflow_resources() {
 		wp_enqueue_style( 'cg-formflow-default', plugins_url( 'assets/css/default.css', __FILE__ ) );
 	}
-	add_action( 'wp_head', 'cg_formflow_resources' );
+	add_action( 'wp_enqueue_scripts', 'cg_formflow_resources' );
 
