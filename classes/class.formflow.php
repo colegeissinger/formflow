@@ -15,7 +15,7 @@
 		 * Allow us to set the demo settings and forms. This will also enable debugging for the form outputs
 		 * @var boolean
 		 */
-		private $form_debug = false;
+		private $form_debug = true;
 
 
 		/**
@@ -169,6 +169,25 @@
 					'options'	  => array(	// Add our minimum and maximum fields if we want to
 						'minimum' => 1, // Should be positive integers only
 						'maximum' => 10,
+					),
+				),
+			),
+			array(
+				'id'   	   => 7,
+				'type' 	   => 'checkbox',
+				'required' => false,
+				'args' 	   => array(
+					'w_id'  	  => 'form-title',
+					'w_class' 	  => 'form-title-class',
+					'id'		  => 'text-field',
+					'class'		  => 'text-input',
+					'label' 	  => 'CHECKBOX',
+					'name'	  	  => 'checkbox',
+					'description' => '',
+					'options'	  => array(	// Add the names of each checkbox. All of these will be saved to one field as an array
+						'option-1' => 'Option 1',
+						'option-2' => 'Option 2',
+						'option-3' => 'Option 3',
 					),
 				),
 			),
@@ -484,7 +503,7 @@
 					if ( isset( $args['name'] ) ) {
 						$output .= ' name="' . esc_attr( $args['name'] ) . '"';
 					} else {
-						$output .= ' name="' . esc_attr( $args['label'] ) . '"';
+						$output .= ' name="' . esc_attr( sanitize_title( $args['label'] ) ) . '"';
 					}
 
 					// Check for an ID
@@ -523,7 +542,7 @@
 					if ( isset( $args['name'] ) ) {
 						$output .= ' name="' . esc_attr( $args['name'] ) . '"';
 					} else {
-						$output .= ' name="' . esc_attr( $args['label'] ) . '"';
+						$output .= ' name="' . esc_attr( sanitize_title( $args['label'] ) ) . '"';
 					}
 
 					// Check for an ID
@@ -566,7 +585,7 @@
 					if ( isset( $args['name'] ) ) {
 						$output .= ' name="' . esc_attr( $args['name'] ) . '"';
 					} else {
-						$output .= ' name="' . esc_attr( $args['label'] ) . '"';
+						$output .= ' name="' . esc_attr( sanitize_title( $args['label'] ) ) . '"';
 					}
 
 					// Check if an ID is set
@@ -607,7 +626,7 @@
 					if ( isset( $args['name'] ) ) {
 						$output .= ' name="' . esc_attr( $args['name'] ) . '"';
 					} else {
-						$output .= ' name="' . esc_attr( $args['label'] ) . '"';
+						$output .= ' name="' . esc_attr( sanitize_title( $args['label'] ) ) . '"';
 					}
 
 					// Check if an ID is set
@@ -647,7 +666,7 @@
 					if ( isset( $args['name'] ) ) {
 						$output .= ' name="' . esc_attr( $args['name'] ) . '"';
 					} else {
-						$output .= ' name="' . esc_attr( $args['label'] ) . '"';
+						$output .= ' name="' . esc_attr( sanitize_title( $args['label'] ) ) . '"';
 					}
 
 					// Check for an ID
@@ -686,6 +705,50 @@
 		 * @since   0.1
 		 */
 		private function get_checkbox( $args ) {
+
+			if ( ! empty( $args ) ) {
+
+				// Process our checkbox and labels
+				if ( isset( $args['options'] ) && is_array( $args['options'] ) ) {
+
+					$output = '<ul class="checkboxes">';
+
+					foreach ( $args['options'] as $id => $name ) {
+
+						$output .= '<li>';
+
+							$output .= '<input type="checkbox"';
+
+								/// Set our name field, if one doesn't exist, use the label
+								if ( isset( $args['name'] ) ) {
+									$output .= ' name="' . esc_attr( $args['name'] ) . '"';
+								} else {
+									$output .= ' name="' . esc_attr( sanitize_title( $args['label'] ) ) . '"';
+								}
+
+								// Check for an ID
+								if ( isset( $args['id'] ) )
+									$output .= ' id="' . esc_attr( $id ) . '"';
+
+								// Check for a class
+								if ( isset( $args['class'] ) )
+									$output .= ' class="' . esc_attr( $args['class'] ) . '"';
+
+							$output .= ' /> ';
+
+							$output .= '<label for="' . esc_attr( $id ) . '">' . esc_html( $name ) . '</label>';
+
+						$output .= '</li>';
+
+					}
+
+					$output .= '</ul>';
+
+				}
+
+				return $output;
+
+			}
 
 		}
 
